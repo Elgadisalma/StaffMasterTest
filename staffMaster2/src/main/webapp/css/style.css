@@ -1,0 +1,122 @@
+.dark-background {
+    background-color: #1a1a40;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container for forms */
+.container {
+    background-color: #292952;
+    padding: 3rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #000;
+    font-size: 14px;
+}
+
+.submit-btn {
+    background-color: #ff9933;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #e68a00;
+}
+
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #292952;
+    margin-top: 20px;
+}
+
+.employee-table th, .employee-table td {
+    padding: 12px;
+    border: 1px solid #fff;
+    text-align: left;
+    color: #fff;
+}
+
+.employee-table th {
+    background-color: #3a3a72;
+}
+
+.btn-edit, .btn-delete {
+    background-color: #ff9933;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-delete {
+    background-color: #ff4d4d;
+}
+
+.btn-edit:hover {
+    background-color: #e68a00;
+}
+
+.btn-delete:hover {
+    background-color: #e60000;
+}
+
+.df {
+    display: flex;
+    gap: 10px;
+}
+
+
+.info-group {
+    background-color: #292952;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.info-highlight {
+    background-color: #ff9933;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #1a1a40;
+    font-weight: bold;
+    text-align: center;
+}
