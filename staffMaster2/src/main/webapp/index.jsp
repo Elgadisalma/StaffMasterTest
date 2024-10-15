@@ -47,6 +47,19 @@
         </select>
         <button type="submit" class="btn-submit">Exécuter</button>
     </form>
+
+
+    <h2>Connexion</h2>
+    <form action="auth" method="post">
+        <label for="email">Email :</label>
+        <input type="text" id="email" name="email" required><br>
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="submit" value="Login">
+    </form>
+    <c:if test="${not empty error}">
+        <p style="color: red;">${error}</p>
+    </c:if>
 </div>
 </body>
 </html>

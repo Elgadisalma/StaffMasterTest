@@ -2,13 +2,29 @@ package org.example.staffmaster2.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import org.example.staffmaster2.config.EntityManagerFactorySingleton;
 import org.example.staffmaster2.entity.Employee;
+import org.example.staffmaster2.entity.User;
 
 import java.util.List;
 
 public class EmployeeDao {
     EntityManagerFactory emf = EntityManagerFactorySingleton.getEntityManagerFactory();
+
+    public User findByEmail(String email) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
+            query.setParameter("email", email);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 
     public void addEmployee(Employee employee) {
         EntityManager em = null;
