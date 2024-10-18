@@ -41,19 +41,11 @@ public class EmployeeService {
 
         if (salaire < 6000) {
             for (int i = 1; i <= nEnfants && i <= 6; i++) {
-                if (i <= 3) {
-                    allocations += 300;
-                } else {
-                    allocations += 150;
-                }
+                allocations += (i <= 3) ? 300 : 150;
             }
         } else if (salaire > 8000) {
             for (int i = 1; i <= nEnfants && i <= 6; i++) {
-                if (i <= 3) {
-                    allocations += 200;
-                } else {
-                    allocations += 110;
-                }
+                allocations += (i <= 3) ? 200 : 110;
             }
         }
 
@@ -67,11 +59,10 @@ public class EmployeeService {
             throw new IllegalArgumentException("Missing required employee details");
         }
 
-        Role role;
-        try {
-            role = Role.valueOf(roleStr);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid role value: " + roleStr);
+        Role role = validateRole(roleStr);
+
+        if (employeeDao.emailExists(email)) {
+            throw new IllegalArgumentException("Email already exists: " + email);
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,6 +77,13 @@ public class EmployeeService {
                 soldeConge, departement, poste);
     }
 
+    private Role validateRole(String roleStr) {
+        try {
+            return Role.valueOf(roleStr);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role value: " + roleStr);
+        }
+    }
 
     private boolean isNullOrEmpty(String... values) {
         for (String value : values) {

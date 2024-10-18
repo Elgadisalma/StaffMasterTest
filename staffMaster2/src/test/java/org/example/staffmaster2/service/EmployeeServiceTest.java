@@ -27,8 +27,7 @@ class EmployeeServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        employeeService = new EmployeeService();
-        employee = new Employee(null, "John Doe", "john.d@test.com", "password123", Role.employee,
+        employee = new Employee(1L, "John Doe", "john.d@test.com", "password123", Role.employee,
                 new Date(), "N12345", new Date(), 5000.0, 2, 10, "HR", "Manager");
     }
 
