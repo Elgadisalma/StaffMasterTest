@@ -63,12 +63,36 @@ public class EmployeeService {
     public Employee createEmployeeFromRequest(String name, String email, String password, String roleStr, String cnss,
                                               double salaire, int numChilds, int soldeConge, String departement,
                                               String poste, String birthdayStr, String dateEmbaucheStr) throws ParseException {
-        Role role = Role.valueOf(roleStr);
+        if (isNullOrEmpty(name, email, password, roleStr, birthdayStr, dateEmbaucheStr)) {
+            throw new IllegalArgumentException("Missing required employee details");
+        }
+
+        Role role;
+        try {
+            role = Role.valueOf(roleStr);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role value: " + roleStr);
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthday = dateFormat.parse(birthdayStr);
         Date dateEmbauche = dateFormat.parse(dateEmbaucheStr);
 
+        if (birthday.after(dateEmbauche)) {
+            throw new IllegalArgumentException("La date de naissance ne peut pas être postérieure à la date d'embauche.");
+        }
+
         return new Employee(null, name, email, password, role, birthday, cnss, dateEmbauche, salaire, numChilds,
                 soldeConge, departement, poste);
+    }
+
+
+    private boolean isNullOrEmpty(String... values) {
+        for (String value : values) {
+            if (value == null || value.trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
