@@ -116,5 +116,14 @@ public class EmployeeDao {
     }
 
 
-
+    public boolean emailExists(String email) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Long> query = em.createQuery("SELECT COUNT(e) FROM Employee e WHERE e.email = :email", Long.class);
+            query.setParameter("email", email);
+            return query.getSingleResult() > 0; // Return true if email exists
+        } finally {
+            em.close();
+        }
+    }
 }
