@@ -77,7 +77,7 @@ public class EmployeeService {
                 soldeConge, departement, poste);
     }
 
-    private Role validateRole(String roleStr) {
+    public Role validateRole(String roleStr) {
         try {
             return Role.valueOf(roleStr);
         } catch (IllegalArgumentException e) {
@@ -85,7 +85,7 @@ public class EmployeeService {
         }
     }
 
-    private boolean isNullOrEmpty(String... values) {
+    public boolean isNullOrEmpty(String... values) {
         for (String value : values) {
             if (value == null || value.trim().isEmpty()) {
                 return true;
