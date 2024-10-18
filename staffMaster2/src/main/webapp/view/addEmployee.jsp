@@ -19,6 +19,7 @@
       <label for="email">Email:</label>
       <input type="email" name="email" id="email" class="input-field" required>
     </div>
+    <input type="hidden" name="role" value="employee">
     <div class="form-group">
       <label for="password">Password:</label>
       <input type="password" name="password" id="password" class="input-field" required>

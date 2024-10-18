@@ -6,22 +6,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.staffmaster2.dao.OffreDao;
 import org.example.staffmaster2.entity.Offre;
+import org.example.staffmaster2.service.OffreService;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet("/offre")
 public class OffreServlet extends HttpServlet {
-    private OffreDao offreDao;
+    private OffreService offreService;
 
     @Override
     public void init() throws ServletException {
-        offreDao = new OffreDao();
+        offreService = new OffreService();
     }
 
     @Override
@@ -33,17 +31,14 @@ public class OffreServlet extends HttpServlet {
                 dispatcher.forward(request, response);
                 break;
             case "listOffres":
-                List<Offre> offres = offreDao.getOffres();
-                System.out.println(offres);
+                List<Offre> offres = offreService.getAllOffres();
                 request.setAttribute("offres", offres);
                 request.getRequestDispatcher("/view/listOffres.jsp").forward(request, response);
                 break;
             case "postule":
-                String id = request.getParameter("id");
-                long offreId = Long.parseLong(id);
-                Offre offre = offreDao.getOffreById(offreId);
+                long offreId = Long.parseLong(request.getParameter("id"));
+                Offre offre = offreService.getOffreById(offreId);
                 request.setAttribute("offre", offre);
-
                 request.getRequestDispatcher("/view/candidature.jsp").forward(request, response);
                 break;
             default:
@@ -53,26 +48,18 @@ public class OffreServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateValidite = null;
-        Date dateFin = null;
         try {
-            dateValidite = dateFormat.parse(request.getParameter("dateValidite"));
-            dateFin = dateFormat.parse(request.getParameter("dateFin"));
+            Offre offre = offreService.createOffreFromRequest(
+                    request.getParameter("title"),
+                    request.getParameter("description"),
+                    request.getParameter("dateValidite"),
+                    request.getParameter("dateFin")
+            );
+
+            offreService.addOffre(offre);
+            response.sendRedirect("index.jsp");
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new ServletException("Error parsing dates", e);
         }
-        Boolean status = true;
-
-        Offre offre = new Offre(null, title, description, status, dateValidite, dateFin);
-
-        offreDao.addOffre(offre);
-
-        response.sendRedirect("index.jsp");
     }
-
-
 }

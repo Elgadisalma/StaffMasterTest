@@ -29,7 +29,7 @@
         <label for="dateFinConge">Date de conge:</label>
         <input type="date" name="dateFinConge" id="dateFinConge" class="input-field" required>
     </div>
-   
+
     <button type="submit" class="submit-btn">Ajouter l'Offre</button>
 </form>
 
