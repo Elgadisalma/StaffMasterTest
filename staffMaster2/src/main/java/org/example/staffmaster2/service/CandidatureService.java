@@ -10,32 +10,54 @@ import java.util.stream.Collectors;
 
 public class CandidatureService {
     private CondidatureDao condidatureDao;
+    private EmailSender emailSender;
 
-    public CandidatureService() {
-        this.condidatureDao = new CondidatureDao();
+    public CandidatureService(CondidatureDao condidatureDao, EmailSender emailSender) {
+        this.condidatureDao = condidatureDao;
+        this.emailSender = emailSender;
     }
 
     public void addCandidature(Candidature candidature) {
+        if (candidature == null) {
+            throw new IllegalArgumentException("Candidature cannot be null");
+        }
+        if (candidature.getEmail() == null || candidature.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Candidature email cannot be null or empty");
+        }
         condidatureDao.addCondidature(candidature);
     }
 
-    public void confirmCandidature(Long candidatureId) throws MessagingException {
+    public boolean confirmCandidature(Long candidatureId) throws MessagingException {
+        if (candidatureId == null) {
+            throw new IllegalArgumentException("Candidature ID cannot be null");
+        }
+
         Candidature candidature = condidatureDao.getCandidatureById(candidatureId);
+        if (candidature == null) {
+            throw new IllegalArgumentException("Candidature not found for ID: " + candidatureId);
+        }
 
-        if (candidature != null) {
-            candidature.setStatus(true);
-            condidatureDao.updateCandidature(candidature);
+        candidature.setStatus(true);
+        condidatureDao.updateCandidature(candidature);
 
-            // Envoyer l'email de confirmation
-            EmailSender.sendEmail(candidature.getEmail(), "Confirmation de votre candidature",
+        // Try sending the email, if it fails, the method should handle the exception gracefully
+        try {
+            emailSender.sendEmail(candidature.getEmail(), "Confirmation de votre candidature",
                     "Félicitations, votre candidature a été confirmée !");
+            return true;
+        } catch (MessagingException e) {
+            throw new MessagingException("Failed to send confirmation email for candidature ID: " + candidatureId);
         }
     }
 
     public List<Candidature> getPendingCandidatures(String competanceFilter) {
         List<Candidature> candidatures = condidatureDao.getCandidatures();
 
-        // Filtrer les candidatures par statut et compétence
+        if (candidatures == null) {
+            throw new IllegalStateException("No candidatures found in the database");
+        }
+
+        // Filter the candidatures by status and competence
         return candidatures.stream()
                 .filter(c -> !c.getStatus())
                 .filter(c -> competanceFilter == null || c.getCompetance().toLowerCase().contains(competanceFilter.toLowerCase()))
@@ -43,6 +65,15 @@ public class CandidatureService {
     }
 
     public Candidature getCandidatureById(Long candidatureId) {
-        return condidatureDao.getCandidatureById(candidatureId);
+        if (candidatureId == null) {
+            throw new IllegalArgumentException("Candidature ID cannot be null");
+        }
+
+        Candidature candidature = condidatureDao.getCandidatureById(candidatureId);
+        if (candidature == null) {
+            throw new IllegalArgumentException("Candidature not found for ID: " + candidatureId);
+        }
+
+        return candidature;
     }
 }

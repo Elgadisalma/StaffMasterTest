@@ -6,8 +6,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.staffmaster2.dao.CondidatureDao;
 import org.example.staffmaster2.entity.Candidature;
 import org.example.staffmaster2.service.CandidatureService;
+import org.example.staffmaster2.util.EmailSender;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +20,14 @@ public class CondidatureServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        candidatureService = new CandidatureService();
+        // Create instances of CondidatureDao and EmailSender
+        CondidatureDao condidatureDao = new CondidatureDao(); // or use dependency injection framework to manage this
+        EmailSender emailSender = new EmailSender(); // or use dependency injection framework to manage this
+
+        // Pass them to the CandidatureService constructor
+        candidatureService = new CandidatureService(condidatureDao, emailSender);
     }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
